@@ -40,8 +40,14 @@ app.get('/', function (req, res, next) {
 
     ep.after('get_topic_html', pageUrls.length, function (eps) {
         var concurrencyCount = 0
+
+        async.mapLimit(authorUrls, 5, function (myurl, callback) {
+            fetchUrl(myurl, callback)
+        }, function (err, result) {
+            res.send(result)
+        })
         
-        var fetchUrl = function (myurl, callback) {
+        function fetchUrl(myurl, callback) {
             var fetchStart = new Date().getTime()
             concurrencyCount++
 
@@ -72,12 +78,6 @@ app.get('/', function (req, res, next) {
                     callback(null, result)
                 })
         }
-
-        async.mapLimit(authorUrls, 5, function (myurl, callback) {
-            fetchUrl(myurl, callback)
-        }, function (err, result) {
-            res.send(result)
-        })
     })
 })
 
