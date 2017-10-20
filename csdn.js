@@ -2,6 +2,7 @@ var cheerio = require('cheerio')
 var superagent = require('superagent')
 var async = require('async')
 var url = require('url')
+var fs = require("fs")
 
 var express = require('express')
 var app = express()
@@ -45,6 +46,7 @@ app.get('/', function (req, res, next) {
             fetchUrl(myurl, callback)
         }, function (err, result) {
             res.send(result)
+            // fs.writeFile("./file.txt", JSON.stringify(result))
         })
         
         function fetchUrl(myurl, callback) {
